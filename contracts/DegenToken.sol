@@ -5,7 +5,8 @@ import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/token/ERC20/extensions/ERC20Burnable.sol";
 
-contract DegenToken is ERC20, Ownable {
+
+contract DegenToken is ERC20, ERC20Burnable, Ownable {
 
     string itemList = "\n 1.Rapi  \n 2.Anis  \n 3.Neon \n  4.Marian";
 
@@ -23,10 +24,18 @@ contract DegenToken is ERC20, Ownable {
         return itemList;
     }
 
-   // function buyFigure(uint256 _itemNumber) public 
+    mapping(address => uint256[]) public userInventory;
 
-   // create a global variable to store itemInventory of user
+    function redeemItem(uint256 itemNumber) public {
+        updateInventory(_msgSender(), itemNumber);
+    }
 
-   // import burnable 
+    function updateInventory(address _address, uint256 item) private{
+        userInventory[_address].push(item);
+    }
+
+    function displayInventory() public view returns (uint256[] memory){
+        return userInventory[_msgSender()];
+    }
 
 }
